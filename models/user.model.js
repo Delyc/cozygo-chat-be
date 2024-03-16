@@ -33,13 +33,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  faceBook:{
-    type: String,
-  },
+
   insta:{
     type: String,
   },
-  twitter:{
+  tiktok:{
     type: String,
     required: true
   },

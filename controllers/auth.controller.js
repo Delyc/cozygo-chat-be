@@ -11,11 +11,20 @@ export const signup = async (req, res) => {
 
         const token = authHeader.split(' ')[1];
         const decodedToken = decodeJWT(token);
-        const { firstName, sub: email, firstName: password } = decodedToken.payload
+        const { firstName, sub: email, firstName: password, profilePictureUrl: profilePicture, insta, youtube, lastName,  phone: phoneNumber, tiktok, id: userId, userName: username,   } = decodedToken.payload
         const newUser = new User({
             firstName,
             email,
             password, 
+            profilePicture,
+            insta,
+            youtube,
+            lastName,
+            phoneNumber,
+            tiktok,
+            userId,
+            username
+
         });
 
         if (newUser) {
