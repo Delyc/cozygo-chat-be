@@ -4,47 +4,42 @@ import decodeJWT from "../utils/decodeToken.js";
 
 export const signup = async (req, res) => {
     try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({ error: 'No token provided' });
-        }
-
-        const token = authHeader.split(' ')[1];
-        const decodedToken = decodeJWT(token);
-        const { firstName, sub: email, firstName: password, profilePictureUrl, insta, youtube, lastName,  phone, tiktok, id: userId, companyName,   } = decodedToken.payload
-        const newUser = new User({
-            firstName,
-            email,
-            password, 
-            profilePictureUrl,
-            insta,
-            youtube,
-            lastName,
-            phone,
-            tiktok,
-            userId,
-            companyName
-
-        });
-
-        if (newUser) {
-            generateTokenAndSetCookie(newUser._id, res);
-            await newUser.save();
-            console.log("new user", newUser);
-            res.status(201).json({
-                _id: newUser._id,
-                firstName: newUser.firstName,
-                lastName: newUser.lastName,
-            });
-        } else {
-            res.status(400).json({ error: "invalid user data" });
-        }
+        console.log("calleddd")
+      // Extracting data from the request body
+      const { fullname, userId, accountType, companyName, profilePictureUrl, phone, email, password, insta, tiktok, youtube } = req.body;
+  
+      // Creating a new user instance
+      const newUser = new User({
+        fullname,
+        userId,
+        accountType,
+        companyName,
+        profilePictureUrl,
+        phone,
+        email,
+        password,
+        insta,
+        tiktok,
+        youtube
+      });
+  
+      // Saving the user to the database
+      await newUser.save();
+  
+      // Sending a success response
+      res.status(201).json({
+        message: "Account created successfully",
+        user: newUser
+      });
     } catch (error) {
-        console.log("error", error.message);
-        res.status(500).json({ error: "internal server error" });
+      // Handling errors (e.g., validation errors or unique constraint violations)
+      console.error("Signup Error:", error);
+      res.status(500).json({
+        message: "An error occurred during the signup process",
+        error: error.message
+      });
     }
-};
-
+  };
 export const login = async (req, res) => {
     try {
 
